@@ -2,6 +2,7 @@
 
 import { db } from "@/db";
 import { profiles } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { uploadFileToCloudinary } from "@/utils/cloudinary";
