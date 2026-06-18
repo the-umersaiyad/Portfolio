@@ -461,7 +461,7 @@ export function SkillNebula({ active }: { active?: boolean }) {
             </h4>
             
             <div className="flex flex-wrap gap-1.5">
-              {currentSkills.map((skill) => {
+              {currentSkills.map((skill: any) => {
                 const isSelected = selectedSkill?.name === skill.name;
                 return (
                   <button
