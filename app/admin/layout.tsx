@@ -2,6 +2,8 @@ import Link from "next/link";
 import { logout } from "@/app/login/actions";
 import { AdminSidebar } from "@/components/AdminSidebar";
 
+export const dynamic = "force-dynamic";
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-bg flex flex-col md:flex-row text-text font-sans">
