@@ -3,7 +3,7 @@ import { Scene3DWrapper } from "@/components/Scene3DWrapper";
 import { SocialsSEO } from "@/components/SocialsSEO";
 import { db } from "@/db";
 import { siteSections, profiles, projects, journeyEvents, skills, socialLinks } from "@/db/schema";
-import { orderBy } from "drizzle-orm";
+
 
 import type { Metadata } from "next";
 
