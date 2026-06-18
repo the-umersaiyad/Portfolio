@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Calendar, Briefcase, GraduationCap, Sparkles } from "lucide-react";
+import { journeyData } from "./PortfolioApp";
 
 interface Milestone {
   year: string;
@@ -13,7 +14,7 @@ interface Milestone {
   icon: any;
 }
 
-const milestones: Milestone[] = [
+const defaultMilestones: Milestone[] = [
   {
     year: "2025 - Present",
     title: "Full Stack Web Developer Intern",
@@ -42,6 +43,17 @@ const milestones: Milestone[] = [
 
 export function TimeTravelTimeline({ active }: { active?: boolean }) {
   const baseDelay = active ? 0.6 : 0;
+  
+  const data = journeyData && journeyData.length > 0 ? journeyData : defaultMilestones;
+  const milestones = data.map((item: any) => ({
+    year: item.startDate ? `${item.startDate} - ${item.endDate}` : item.year,
+    title: item.title,
+    company: item.organization || item.company,
+    desc: item.description || item.desc,
+    tags: item.tags ? (typeof item.tags === "string" ? item.tags.split(",").map((s: string) => s.trim()) : item.tags) : ["Drizzle", "PostgreSQL", "Next.js"],
+    icon: item.type === "education" ? GraduationCap : Briefcase,
+  }));
+
   return (
     <div className="relative w-full max-w-4xl mx-auto py-8 select-none">
       {/* ═══ VERTICAL PIPELINE TRACK ═══ */}

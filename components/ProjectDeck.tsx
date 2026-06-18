@@ -149,7 +149,7 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
                 >
                   <Image
                     src={project.image}
-                    alt={project.title}
+                    alt={(project as any).imageAlt || project.title}
                     fill
                     loading="lazy"
                     sizes="380px"

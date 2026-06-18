@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Terminal, Code2, Database, Settings, Sparkles, Star, ShieldCheck } from "lucide-react";
 import { ScrambleText } from "@/components/ScrambleText";
+import { skillsData as dbSkillsData } from "./PortfolioApp";
 
 interface Skill {
   name: string;
@@ -13,7 +14,7 @@ interface Skill {
   terminalLogs: string[];
 }
 
-const skillsData: Record<string, Skill[]> = {
+const DEFAULT_SKILLS_DATA: Record<string, Skill[]> = {
   "Frontend & Core": [
     {
       name: "React.js",
@@ -349,20 +350,46 @@ function SkillProgressRing({ proficiency }: { proficiency: number }) {
 // ─── MAIN SKILLS DASHBOARD COMPONENT ───
 
 export function SkillNebula({ active }: { active?: boolean }) {
-  const [activeCategory, setActiveCategory] = useState<string>("Frontend & Core");
-  const [selectedSkill, setSelectedSkill] = useState<Skill>(skillsData["Frontend & Core"][0]);
+  const displaySkills = React.useMemo(() => {
+    if (!dbSkillsData || dbSkillsData.length === 0) return DEFAULT_SKILLS_DATA;
+    const newData: any = {};
+    dbSkillsData.forEach((s: any) => {
+      if (!newData[s.category]) newData[s.category] = [];
+      let fallback: Partial<Skill> = {};
+      Object.values(DEFAULT_SKILLS_DATA).forEach(catArray => {
+        const found = catArray.find(item => item.name === s.name);
+        if (found) fallback = found;
+      });
+      newData[s.category].push({
+        name: s.name,
+        proficiency: s.proficiency,
+        level: s.proficiency >= 90 ? "Advanced" : s.proficiency >= 70 ? "Proficient" : "Intermediate",
+        years: fallback.years || "1+ Years",
+        description: fallback.description || `Experience working with ${s.name} and related technologies.`,
+        terminalLogs: fallback.terminalLogs || [
+          `Initializing ${s.name} environment...`,
+          `✔ Core dependencies loaded`,
+          `✔ Compilation successful`,
+          `STATUS: READY`
+        ]
+      });
+    });
+    return newData;
+  }, [dbSkillsData]);
+
+  const categories = Object.keys(displaySkills);
+  const [activeCategory, setActiveCategory] = useState<string>(categories[0]);
+  const [selectedSkill, setSelectedSkill] = useState<Skill>(displaySkills[categories[0]][0]);
   const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  // Set selected skill when active category changes
   useEffect(() => {
-    const firstSkill = skillsData[activeCategory][0];
-    setSelectedSkill(firstSkill);
-  }, [activeCategory]);
+    if (displaySkills[activeCategory] && displaySkills[activeCategory].length > 0) {
+      setSelectedSkill(displaySkills[activeCategory][0]);
+    }
+  }, [activeCategory, displaySkills]);
 
-  // High-Performance 85ms Hover Debounce to eliminate lag completely during mouse sweeps
   const handleSkillHover = (skill: Skill) => {
     if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
-    
     hoverTimeout.current = setTimeout(() => {
       setSelectedSkill(skill);
     }, 85);
@@ -378,8 +405,7 @@ export function SkillNebula({ active }: { active?: boolean }) {
     };
   }, []);
 
-  const categories = Object.keys(skillsData);
-  const currentSkills = skillsData[activeCategory] || [];
+  const currentSkills = displaySkills[activeCategory] || [];
 
   return (
     <div className="w-full select-none text-left">

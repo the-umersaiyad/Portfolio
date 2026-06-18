@@ -65,7 +65,7 @@ function BrandIcon({ name, className }: { name: string; className?: string }) {
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
-const profile = {
+export let profile: any = {
   name: "Umer Saiyad",
   title: "Full Stack Developer",
   tagline: "Building modern web experiences.",
@@ -78,16 +78,14 @@ const profile = {
   heroImage: "/umer-hero-bg.png",
 };
 
-const navItems = [
-  { label: "About", href: "#about" },
-  { label: "Services", href: "#services" },
-  { label: "Projects", href: "#projects" },
-  { label: "Skills", href: "#skills" },
-  { label: "Socials", href: "#socials" },
-  { label: "Contact", href: "#contact" },
-];
+export let desktopSections: any[] = [];
+export let mobileSections: any[] = [];
+export let firstDesktopSection: any = null;
+export let lastDesktopSection: any = null;
+export let middleDesktopSections: any[] = [];
+export let navItems: any[] = [];
 
-const projects = [
+export let projects: any[] = [
   {
     title: "LawAssist",
     description:
@@ -116,11 +114,16 @@ const projects = [
 
 // Social media feeds and updates loaded dynamically inside the Socials component.
 
-const socialLinks = [
+export let socialLinks: any[] = [
   { name: "github", href: "https://github.com/Umer-Enacton", label: "GitHub" },
   { name: "linkedin", href: "https://www.linkedin.com/in/umer-saiyad-741710254/", label: "LinkedIn" },
   { name: "instagram", href: "https://www.instagram.com/the_umersaiyad/", label: "Instagram" },
 ];
+
+export let journeyData: any[] = [];
+export let skillsData: any[] = [];
+export let dbSections: any[] = [];
+
 
 // ─── Utility Components ──────────────────────────────────────────────────────
 
@@ -347,14 +350,11 @@ function Header() {
     }
 
     // On desktop: fullpage scroll controller
-    const map: Record<string, number> = {
-      "#about": 1,
-      "#services": 2,
-      "#projects": 3,
-      "#skills": 4,
-      "#socials": 5,
-      "#contact": 7,
-    };
+    const map: Record<string, number> = {};
+    navItems.forEach((item, idx) => {
+      map[item.href] = item.pageIndex;
+    });
+
     const page = map[href];
     if (page !== undefined) {
       scrollController.goTo(page);
@@ -533,7 +533,19 @@ function Hero({ active }: { active?: boolean }) {
               <PremiumButton variant="primary" onClick={() => scrollController.goTo(3)} icon="arrow">
                 View Projects
               </PremiumButton>
-              <PremiumButton variant="secondary" onClick={() => scrollController.goTo(7)} icon="download">
+              <PremiumButton 
+                variant="secondary" 
+                onClick={() => {
+                  // @ts-ignore (Assuming cvUrl is dynamically attached to profile data now)
+                  if (profile.cvUrl) {
+                    // @ts-ignore
+                    window.open(profile.cvUrl, '_blank');
+                  } else {
+                    scrollController.goTo(scrollController.totalPages - 1);
+                  }
+                }} 
+                icon="download"
+              >
                 Download CV
               </PremiumButton>
             </div>
@@ -564,7 +576,7 @@ function Hero({ active }: { active?: boolean }) {
               <div className="absolute inset-0 bg-gradient-to-b from-accent/20 to-transparent rounded-3xl dark:block hidden" />
               <Image
                 src={profile.heroImage}
-                alt="Umer Saiyad - Full Stack Developer standing with arms crossed, professional portrait"
+                alt={profile.heroImageAlt || "Portfolio Hero Image"}
                 fill
                 priority
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -1393,9 +1405,8 @@ function MobileScrollProgress() {
 
 // ─── Section Dots Navigation (Liquid Goo Effect) ─────────────────────────────
 
-const sectionIds = ["home", "about", "services", "projects", "skills", "socials", "process", "contact"];
-
 function SectionDots() {
+  const sectionIds = desktopSections.map(s => s.id);
   const [active, setActive] = useState(0);
 
   useEffect(() => {
@@ -1497,8 +1508,64 @@ function SectionDots() {
 
 // ─── Card Sections Array ─────────────────────────────────────────────────────
 
-const cardSections = [About, Services, Projects, Skills, Socials, Process];
-export function PortfolioApp() {
+
+export function PortfolioApp({ dbData }: { dbData?: any }) {
+  if (dbData) {
+    if (dbData.profile) profile = dbData.profile;
+    if (dbData.projects && dbData.projects.length > 0) projects = dbData.projects;
+    if (dbData.socials && dbData.socials.length > 0) {
+      socialLinks = dbData.socials.map((s: any) => ({
+        name: s.platform || s.name,
+        href: s.url || s.href,
+        label: (s.platform || s.name || "").charAt(0).toUpperCase() + (s.platform || s.name || "").slice(1)
+      }));
+    }
+    if (dbData.journey) journeyData = dbData.journey;
+    if (dbData.skills) skillsData = dbData.skills;
+    if (dbData.sections) {
+      const COMP_MAP: any = {
+        hero: { comp: Hero, label: "Home", href: "#home" },
+        about: { comp: About, label: "About", href: "#about" },
+        services: { comp: Services, label: "Services", href: "#services" },
+        projects: { comp: Projects, label: "Projects", href: "#projects" },
+        skills: { comp: Skills, label: "Skills", href: "#skills" },
+        journey: { comp: Process, label: "Journey", href: "#process" },
+        socials: { comp: Socials, label: "Socials", href: "#socials" },
+        contact: { comp: Contact, label: "Contact", href: "#contact" }
+      };
+
+      const sorted = [...dbData.sections].sort((a: any, b: any) => a.order - b.order);
+      
+      desktopSections = sorted
+        .filter((s: any) => s.isVisible)
+        .map((s: any) => ({ id: s.sectionId, ...COMP_MAP[s.sectionId] }))
+        .filter((s: any) => s.comp);
+        
+      mobileSections = sorted
+        .filter((s: any) => s.isMobileVisible)
+        .map((s: any) => ({ id: s.sectionId, ...COMP_MAP[s.sectionId] }))
+        .filter((s: any) => s.comp);
+
+      if (desktopSections.length > 0) {
+        firstDesktopSection = desktopSections[0];
+        lastDesktopSection = desktopSections.length > 1 ? desktopSections[desktopSections.length - 1] : null;
+        middleDesktopSections = desktopSections.slice(1, -1);
+      } else {
+        firstDesktopSection = { id: 'hero', ...COMP_MAP['hero'] };
+        lastDesktopSection = null;
+        middleDesktopSections = [];
+        desktopSections = [firstDesktopSection];
+      }
+
+      navItems = desktopSections.map((s, idx) => ({
+        label: s.label,
+        href: s.href,
+        pageIndex: idx
+      })).filter(item => item.label !== "Home"); // Hide home from nav bar text
+
+      scrollController.totalPages = desktopSections.length;
+    }
+  }
   const [currentPage, setCurrentPage] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -1688,7 +1755,7 @@ export function PortfolioApp() {
 
   // Determine what to show
   const isHero = currentPage === 0;
-  const isContact = currentPage === 7;
+  const isContact = currentPage === desktopSections.length - 1;
 
   // Mobile: normal scrollable layout (no fullpage controller)
   if (isMobile) {
@@ -1698,20 +1765,11 @@ export function PortfolioApp() {
         <MobileScrollProgress />
         <Header />
         <main className="pt-25">
-          <section className="pb-8">
-            <Hero />
-          </section>
-          <div className="px-4 py-12 space-y-20">
-            <About />
-            <Services />
-            <Projects />
-            <Skills />
-            {/* Socials section completely hidden on mobile as requested */}
-            <Process />
-          </div>
-          <section className="py-16">
-            <Contact />
-          </section>
+          {mobileSections.map((Section, idx) => (
+            <div key={Section.id} className={idx === 0 ? "pb-8" : idx === mobileSections.length - 1 ? "py-16" : "px-4 py-12"}>
+              <Section.comp />
+            </div>
+          ))}
         </main>
         <footer className="border-t border-border py-6 px-4 text-center text-sm text-text-muted">
           <p>© {new Date().getFullYear()} {profile.name}. All rights reserved.</p>
@@ -1732,12 +1790,12 @@ export function PortfolioApp() {
   let cardWrapperY = 0;
   if (currentPage === 0) {
     cardWrapperY = 100;
-  } else if (currentPage === 7) {
+  } else if (currentPage === desktopSections.length - 1) {
     cardWrapperY = -100;
   }
 
   // Contact offset
-  const contactY = currentPage === 7 ? 0 : 100;
+  const contactY = currentPage === desktopSections.length - 1 ? 0 : 100;
 
   // Hero offset
   const heroY = currentPage === 0 ? 0 : -100;
@@ -1758,7 +1816,7 @@ export function PortfolioApp() {
             willChange: "transform",
           }}
         >
-          <Hero active={isHero} />
+          {firstDesktopSection && <firstDesktopSection.comp active={isHero} />}
         </div>
 
         {/* Card with sections */}
@@ -1772,7 +1830,7 @@ export function PortfolioApp() {
         >
           <GlowCardWrapper className="w-full max-w-7xl relative hide-scrollbar">
             <div className="relative overflow-hidden hide-scrollbar" style={{ height: "75vh" }}>
-              {cardSections.map((Section, index) => {
+              {middleDesktopSections.map((SectionInfo, index) => { const Section = SectionInfo.comp;
                 const targetCardIndex = currentPage - 1;
                 const offset = index - targetCardIndex;
 
@@ -1810,7 +1868,7 @@ export function PortfolioApp() {
             willChange: "transform",
           }}
         >
-          <Contact active={isContact} />
+          {lastDesktopSection && <lastDesktopSection.comp active={isContact} />}
           <FooterSection />
         </div>
       </div>

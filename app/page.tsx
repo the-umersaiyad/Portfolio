@@ -1,8 +1,82 @@
 import { PortfolioApp } from "@/components/PortfolioApp";
 import { Scene3DWrapper } from "@/components/Scene3DWrapper";
 import { SocialsSEO } from "@/components/SocialsSEO";
+import { db } from "@/db";
+import { siteSections, profiles, projects, journeyEvents, skills, socialLinks } from "@/db/schema";
+import { orderBy } from "drizzle-orm";
 
-export default function Home() {
+import type { Metadata } from "next";
+
+// Make the home page dynamic so it re-fetches when data changes
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const dbProfiles = await db.select().from(profiles).limit(1);
+  const profile = dbProfiles[0];
+  
+  if (!profile || !profile.heroImage) return {};
+
+  const imageUrl = profile.heroImage.startsWith("http") 
+    ? profile.heroImage 
+    : `https://umer-saiyad.vercel.app${profile.heroImage}`;
+
+  return {
+    openGraph: {
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: profile.heroImageAlt || profile.name,
+        },
+      ],
+    },
+    twitter: {
+      images: [imageUrl],
+    },
+  };
+}
+
+export default async function Home() {
+  const [
+    dbSections,
+    dbProfiles,
+    dbProjects,
+    dbJourneyEvents,
+    dbSkills,
+    dbSocialLinks,
+  ] = await Promise.all([
+    db.select().from(siteSections).orderBy(siteSections.order),
+    db.select().from(profiles),
+    db.select().from(projects).orderBy(projects.order),
+    db.select().from(journeyEvents).orderBy(journeyEvents.order),
+    db.select().from(skills).orderBy(skills.order),
+    db.select().from(socialLinks).orderBy(socialLinks.order),
+  ]);
+
+  const profile = dbProfiles[0] || {
+    name: "Umer Saiyad",
+    title: "Full Stack Developer",
+    tagline: "Building modern web experiences.",
+    location: "Surat, Gujarat, India",
+    email: "umersaiyad76@gmail.com",
+    phone: "+91 9510131599",
+    experience: "6+ Months",
+    availability: "Available for freelance",
+    heroImage: "/umer-hero-bg.png",
+    heroImageAlt: "Umer Saiyad - Full Stack Developer",
+    cvUrl: "",
+  };
+
+  const payload = {
+    sections: dbSections,
+    profile,
+    projects: dbProjects,
+    journey: dbJourneyEvents,
+    skills: dbSkills,
+    socials: dbSocialLinks,
+  };
+
   return (
     <>
       <SocialsSEO />
@@ -13,39 +87,21 @@ export default function Home() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Person",
-            name: "Umer Saiyad",
+            name: profile.name,
             url: "https://umer-saiyad.vercel.app",
-            image: "https://umer-saiyad.vercel.app/umer-hero.png",
-            jobTitle: "Full Stack Web Developer",
-            description:
-              "Full Stack Developer specializing in React, Next.js, Node.js, and the MERN stack. Building premium web applications from Gujarat, India.",
+            image: profile.heroImage.startsWith("http") 
+              ? profile.heroImage 
+              : `https://umer-saiyad.vercel.app${profile.heroImage}`,
+            jobTitle: profile.title,
+            description: profile.tagline,
             address: {
               "@type": "PostalAddress",
-              addressLocality: "Gujarat",
+              addressLocality: profile.location,
               addressCountry: "IN",
             },
-            email: "umersaiyad76@gmail.com",
-            sameAs: [
-              "https://github.com/Umer-Enacton",
-              "https://www.linkedin.com/in/umer-saiyad-741710254/",
-              "https://www.instagram.com/the_umersaiyad/",
-            ],
-            knowsAbout: [
-              "React",
-              "Next.js",
-              "Node.js",
-              "TypeScript",
-              "JavaScript",
-              "MongoDB",
-              "Express.js",
-              "Tailwind CSS",
-              "Full Stack Development",
-              "Web Development",
-            ],
-            alumniOf: {
-              "@type": "EducationalOrganization",
-              name: "Uka Tarsadia University",
-            },
+            email: profile.email,
+            sameAs: dbSocialLinks.map((s) => s.url),
+            knowsAbout: dbSkills.map((s) => s.name),
           }),
         }}
       />
@@ -55,18 +111,17 @@ export default function Home() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebSite",
-            name: "Umer Saiyad Portfolio",
+            name: `${profile.name} Portfolio`,
             url: "https://umer-saiyad.vercel.app",
-            description:
-              "Portfolio of Umer Saiyad — Full Stack Developer specializing in React, Next.js, and modern web technologies.",
+            description: profile.tagline,
             author: {
               "@type": "Person",
-              name: "Umer Saiyad",
+              name: profile.name,
             },
           }),
         }}
       />
-      <PortfolioApp />
+      <PortfolioApp dbData={payload} />
     </>
   );
 }
