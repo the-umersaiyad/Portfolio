@@ -53,7 +53,7 @@ export default async function ProjectsAdminPage(props: { searchParams?: Promise<
           </div>
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-text-secondary ml-1">Link URL</label>
-            <input name="link" defaultValue={projectToEdit?.link || ""} required className="w-full bg-bg border border-border rounded-xl px-4 py-3 text-sm text-text focus:outline-none focus:border-accent transition-all" />
+            <input name="link" type="url" defaultValue={projectToEdit?.link || ""} required className="w-full bg-bg border border-border rounded-xl px-4 py-3 text-sm text-text focus:outline-none focus:border-accent transition-all" />
           </div>
           <div className="space-y-1.5 md:col-span-2">
             <label className="text-sm font-medium text-text-secondary ml-1">Description</label>

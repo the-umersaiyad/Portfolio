@@ -4,6 +4,7 @@ import { addSkill, deleteSkill, updateSkill } from "./actions";
 import { Code2, Plus, Edit, X } from "lucide-react";
 import { SubmitButton } from "@/components/SubmitButton";
 import { SkillsList } from "@/components/SkillsList";
+import { ProficiencyInput } from "@/components/ProficiencyInput";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
 
@@ -55,7 +56,7 @@ export default async function SkillsAdminPage(props: { searchParams?: Promise<an
           </div>
           <div className="space-y-1.5 md:col-span-2">
             <label className="text-sm font-medium text-text-secondary ml-1">Proficiency (0-100)</label>
-            <input name="proficiency" type="number" min="0" max="100" defaultValue={skillToEdit?.proficiency?.toString() || "80"} required className="w-full bg-bg border border-border rounded-xl px-4 py-3 text-sm text-text focus:outline-none focus:border-accent transition-all" />
+            <ProficiencyInput defaultValue={skillToEdit?.proficiency?.toString() || "80"} />
           </div>
 
           <div className="md:col-span-2 pt-2 flex justify-end">

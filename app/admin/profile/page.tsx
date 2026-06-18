@@ -57,7 +57,7 @@ export default async function ProfileAdminPage() {
           </div>
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-text-secondary ml-1">Phone</label>
-            <input name="phone" defaultValue={profile.phone} required className="w-full bg-bg border border-border rounded-xl px-4 py-3 text-sm text-text focus:outline-none focus:border-accent transition-all" />
+            <input name="phone" type="tel" defaultValue={profile.phone} required className="w-full bg-bg border border-border rounded-xl px-4 py-3 text-sm text-text focus:outline-none focus:border-accent transition-all" />
           </div>
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-text-secondary ml-1">Location</label>
