@@ -160,7 +160,7 @@ export function TimeTravelTimeline({ active }: { active?: boolean }) {
                       isEven ? "md:justify-end" : "justify-start"
                     }`}
                   >
-                    {item.tags.map((tag) => (
+                    {item.tags.map((tag: string) => (
                       <span
                         key={tag}
                         className="text-[9px] px-2.5 py-0.5 rounded-full bg-border/30 text-text-secondary border border-border/10 font-mono"
