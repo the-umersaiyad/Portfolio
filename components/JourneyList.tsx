@@ -52,7 +52,7 @@ export function JourneyList({ initialEvents }: { initialEvents: JourneyEvent[] }
                 <br />
                 <span className="text-xs">{ev.startDate} - {ev.endDate}</span>
               </div>
-              <div className="col-span-8">
+              <div className="col-span-8 py-2">
                 <div className="font-medium text-text">{ev.title}</div>
                 <div className="text-sm text-accent font-medium mt-0.5">{ev.organization}</div>
                 <div className="text-xs text-text-muted mt-1 truncate">{ev.description}</div>

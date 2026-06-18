@@ -47,7 +47,7 @@ export function SectionsList({ initialSections }: { initialSections: Section[] }
           keyExtractor={(item) => item.id.toString()}
           renderItem={(section) => (
             <div className="grid grid-cols-12 gap-4 items-center w-full">
-              <div className="col-span-6 font-medium text-text">
+              <div className="col-span-6 font-medium text-text py-2">
                 {section.displayName}
                 <div className="text-xs text-text-muted font-mono mt-0.5">#{section.sectionId}</div>
               </div>

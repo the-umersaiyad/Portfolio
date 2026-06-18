@@ -48,7 +48,7 @@ export function ProjectsList({ initialProjects }: { initialProjects: Project[] }
           keyExtractor={(item) => item.id.toString()}
           renderItem={(project) => (
             <div className="grid grid-cols-12 gap-4 items-center w-full">
-              <div className="col-span-2">
+              <div className="col-span-2 py-2">
                 <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-border bg-card/50">
                   <Image src={project.image} alt={project.imageAlt} fill className="object-cover" />
                 </div>
