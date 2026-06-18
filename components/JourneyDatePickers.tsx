@@ -28,11 +28,13 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 function CustomMonthPicker({ 
   value, 
   onChange, 
-  disabled 
+  disabled,
+  minDate
 }: { 
   value: string; 
   onChange: (val: string) => void;
   disabled?: boolean;
+  minDate?: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -53,7 +55,16 @@ function CustomMonthPicker({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const isMonthDisabled = (year: number, monthIdx: number) => {
+    if (!minDate) return false;
+    const [minY, minM] = minDate.split("-").map(Number);
+    if (year < minY) return true;
+    if (year === minY && monthIdx < minM - 1) return true;
+    return false;
+  };
+
   const handleSelectMonth = (monthIdx: number) => {
+    if (isMonthDisabled(viewYear, monthIdx)) return;
     const monthStr = monthIdx + 1 < 10 ? `0${monthIdx + 1}` : `${monthIdx + 1}`;
     onChange(`${viewYear}-${monthStr}`);
     setIsOpen(false);
@@ -99,12 +110,16 @@ function CustomMonthPicker({
           <div className="grid grid-cols-3 gap-2">
             {MONTHS.map((m, idx) => {
               const isSelected = viewYear === currentYear && idx === currentMonthIdx;
+              const disabledMonth = isMonthDisabled(viewYear, idx);
               return (
                 <button
                   key={m}
                   type="button"
+                  disabled={disabledMonth}
                   onClick={() => handleSelectMonth(idx)}
                   className={`py-2 text-sm rounded-lg transition-all ${
+                    disabledMonth 
+                      ? "opacity-20 cursor-not-allowed" :
                     isSelected 
                       ? "bg-accent text-white font-medium shadow-lg shadow-accent/20" 
                       : "text-text hover:bg-bg hover:text-accent"
@@ -125,6 +140,17 @@ export function JourneyDatePickers({ defaultStart, defaultEnd }: { defaultStart?
   const [start, setStart] = useState(parseMonth(defaultStart || ""));
   const [end, setEnd] = useState(parseMonth(defaultEnd || ""));
   const [isPresent, setIsPresent] = useState(defaultEnd === "Present");
+
+  // Auto-correct end date if start date is moved past it
+  useEffect(() => {
+    if (start && end && !isPresent) {
+      const [sy, sm] = start.split("-").map(Number);
+      const [ey, em] = end.split("-").map(Number);
+      if (sy > ey || (sy === ey && sm > em)) {
+        setEnd(start);
+      }
+    }
+  }, [start, end, isPresent]);
 
   return (
     <>
@@ -154,6 +180,7 @@ export function JourneyDatePickers({ defaultStart, defaultEnd }: { defaultStart?
           value={end} 
           onChange={setEnd} 
           disabled={isPresent}
+          minDate={start}
         />
         <input type="hidden" name="endDate" value={isPresent ? "Present" : formatMonth(end)} />
       </div>
