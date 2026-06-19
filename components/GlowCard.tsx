@@ -10,7 +10,7 @@ interface GlowCardProps {
 export function GlowCard({ children, className = "" }: GlowCardProps) {
   return (
     <div
-      className={`relative overflow-hidden rounded-[2.5rem] shadow-2xl border-2 border-border/40 hover:border-accent/35 bg-surface/90 transition-colors duration-200 ${className}`}
+      className={`relative overflow-hidden rounded-[2.5rem] shadow-2xl border-2 border-border/40 hover:border-accent/35 bg-surface/90 transition-colors duration-200 mt-10 sm:mt-12 lg:mt-16 ${className}`}
       style={{
         minHeight: "65vh",
         boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
@@ -51,7 +51,27 @@ export function GlowCard({ children, className = "" }: GlowCardProps) {
       <div className="glowcard-grain" />
 
       {/* Content */}
-      <div className="relative z-10">
+      <style>{`
+        /* Shrink internal elements to fit the default 75vh GlowCard on smaller screen heights, 
+           preventing it from clipping content. */
+        @media (max-height: 800px) {
+          .glow-content-wrapper .lg\\:p-14 { padding: 1.25rem !important; }
+          .glow-content-wrapper .mb-12 { margin-bottom: 1.25rem !important; }
+          .glow-content-wrapper .md\\:h-\\[340px\\] { height: 260px !important; min-height: 260px !important; }
+          .glow-content-wrapper .md\\:h-\\[340px\\] > div { min-height: auto !important; }
+        }
+        @media (max-height: 650px) {
+          .glow-content-wrapper .lg\\:p-14, .glow-content-wrapper .sm\\:p-10 { padding: 1rem !important; }
+          .glow-content-wrapper .mb-12 { margin-bottom: 1rem !important; }
+          .glow-content-wrapper .md\\:h-\\[340px\\] { height: 220px !important; min-height: 220px !important; }
+        }
+        @media (max-height: 550px) {
+          .glow-content-wrapper .lg\\:p-14, .glow-content-wrapper .sm\\:p-10, .glow-content-wrapper .p-6 { padding: 0.75rem !important; }
+          .glow-content-wrapper .mb-12 { margin-bottom: 0.75rem !important; }
+          .glow-content-wrapper .md\\:h-\\[340px\\] { height: 180px !important; min-height: 180px !important; }
+        }
+      `}</style>
+      <div className="relative z-10 w-full h-full glow-content-wrapper">
         {children}
       </div>
     </div>
