@@ -1,5 +1,12 @@
 import { pgTable, serial, text, boolean, integer, jsonb } from "drizzle-orm/pg-core";
 
+export const globalSettings = pgTable("global_settings", {
+  id: serial("id").primaryKey(),
+  activeTheme: text("active_theme").default("dark").notNull(),
+  accentColorDark: text("accent_color_dark").default("#10b981").notNull(),
+  accentColorLight: text("accent_color_light").default("#8b5cf6").notNull(),
+});
+
 export const siteSections = pgTable("site_sections", {
   id: serial("id").primaryKey(),
   sectionId: text("section_id").notNull().unique(), // e.g., 'hero', 'about'

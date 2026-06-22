@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { siteSections } from "@/db/schema";
+import { siteSections, globalSettings } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -38,4 +38,33 @@ export async function updateSectionsOrder(updates: { id: number; order: number }
   }
   revalidatePath("/admin");
   revalidatePath("/");
+}
+
+export async function initializeSettings() {
+  try {
+    const existing = await db.select().from(globalSettings);
+    if (existing.length === 0) {
+      await db.insert(globalSettings).values({
+        activeTheme: "dark",
+        accentColorDark: "#10b981",
+        accentColorLight: "#8b5cf6",
+      });
+    }
+  } catch (e) {
+    console.warn("Could not initialize settings: table may not exist.");
+  }
+}
+
+export async function updateGlobalSettings(data: { activeTheme?: string; accentColorDark?: string; accentColorLight?: string }) {
+  try {
+    const existing = await db.select().from(globalSettings);
+    if (existing.length === 0) {
+      await initializeSettings();
+    }
+    await db.update(globalSettings).set(data).where(eq(globalSettings.id, 1));
+    revalidatePath("/");
+    revalidatePath("/admin");
+  } catch (e) {
+    console.warn("Could not update settings: table may not exist.");
+  }
 }

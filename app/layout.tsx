@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import { db } from "@/db";
+import { globalSettings } from "@/db/schema";
+import { ThemeSync } from "@/components/ThemeSync";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -88,10 +91,37 @@ export const metadata: Metadata = {
   verification: { google: "BL1Hk09MhVYcs88MdreAA074s_PcQ8J-HZQg6sbyJlU" },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  let settings: any[] = [];
+  try {
+    settings = await db.select().from(globalSettings);
+  } catch (e) {
+    console.warn("Global settings table missing, using fallbacks.");
+  }
+  
+  // Provide safe fallbacks if DB is empty during first boot
+  const activeTheme = settings[0]?.activeTheme || "dark";
+  const darkAccent = settings[0]?.accentColorDark || "#10b981";
+  const lightAccent = settings[0]?.accentColorLight || "#8b5cf6";
+
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${plusJakarta.variable} ${spaceGrotesk.variable} dark`} suppressHydrationWarning>
-      <body>{children}</body>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${plusJakarta.variable} ${spaceGrotesk.variable} ${activeTheme}`} suppressHydrationWarning>
+      <head>
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            :root {
+              --color-accent-override: ${darkAccent};
+            }
+            .light {
+              --color-accent-override: ${lightAccent};
+            }
+          `
+        }} />
+      </head>
+      <body>
+        <ThemeSync publicTheme={activeTheme} />
+        {children}
+      </body>
     </html>
   );
 }

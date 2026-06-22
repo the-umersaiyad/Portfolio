@@ -1,11 +1,23 @@
 import { db } from "@/db";
-import { siteSections } from "@/db/schema";
-import { initializeSections, toggleSectionVisibility } from "./actions";
+import { siteSections, globalSettings } from "@/db/schema";
+import { initializeSections, initializeSettings, toggleSectionVisibility } from "./actions";
 import { Settings, AlertCircle } from "lucide-react";
 import { SectionsList } from "@/components/SectionsList";
+import { ThemeConfigCard } from "@/components/ThemeConfigCard";
 
 export default async function SuperAdminConfigPage() {
   let sections = await db.select().from(siteSections).orderBy(siteSections.order);
+  let gSettings: any[] = [];
+
+  try {
+    gSettings = await db.select().from(globalSettings);
+    if (gSettings.length === 0) {
+      await initializeSettings();
+      gSettings = await db.select().from(globalSettings);
+    }
+  } catch (e) {
+    console.warn("Global settings table missing.");
+  }
 
   // Auto-initialize if empty
   if (sections.length === 0) {
@@ -24,6 +36,8 @@ export default async function SuperAdminConfigPage() {
           Toggle the visibility of sections across your entire portfolio.
         </p>
       </div>
+
+      <ThemeConfigCard initialSettings={gSettings[0] || { activeTheme: "dark", accentColorDark: "#10b981", accentColorLight: "#8b5cf6" }} />
 
       <SectionsList initialSections={sections} />
 
