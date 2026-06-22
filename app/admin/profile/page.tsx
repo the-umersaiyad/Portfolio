@@ -6,6 +6,7 @@ import { User, Save } from "lucide-react";
 import { ImageUploader } from "@/components/ImageUploader";
 import { FileUploader } from "@/components/FileUploader";
 import { SubmitButton } from "@/components/SubmitButton";
+import { PhoneInput } from "@/components/PhoneInput";
 
 export default async function ProfileAdminPage() {
   const data = await db.select().from(profiles);
@@ -57,7 +58,7 @@ export default async function ProfileAdminPage() {
           </div>
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-text-secondary ml-1">Phone</label>
-            <input name="phone" type="tel" defaultValue={profile.phone} required className="w-full bg-bg border border-border rounded-xl px-4 py-3 text-sm text-text focus:outline-none focus:border-accent transition-all" />
+            <PhoneInput name="phone" defaultValue={profile.phone} required />
           </div>
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-text-secondary ml-1">Location</label>

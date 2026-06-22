@@ -5,6 +5,7 @@ import { Clock, Plus, Edit, X } from "lucide-react";
 import { SubmitButton } from "@/components/SubmitButton";
 import { JourneyList } from "@/components/JourneyList";
 import { JourneyDatePickers } from "@/components/JourneyDatePickers";
+import { CustomSelect } from "@/components/CustomSelect";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
 
@@ -48,10 +49,15 @@ export default async function JourneyAdminPage(props: { searchParams?: Promise<a
           
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-text-secondary ml-1">Event Type</label>
-            <select name="type" defaultValue={eventToEdit?.type || "work"} required className="w-full bg-bg border border-border rounded-xl px-4 py-3 text-sm text-text focus:outline-none focus:border-accent transition-all appearance-none">
-              <option value="work">Work Experience</option>
-              <option value="education">Education</option>
-            </select>
+            <CustomSelect
+              name="type"
+              defaultValue={eventToEdit?.type || "work"}
+              required
+              options={[
+                { value: "work", label: "Work Experience" },
+                { value: "education", label: "Education" }
+              ]}
+            />
           </div>
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-text-secondary ml-1">Title/Degree</label>
