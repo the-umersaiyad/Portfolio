@@ -20,14 +20,14 @@
 
 @layer base {
   .light {
-    --color-bg: #fafafa;
-    --color-surface: #ffffff;
-    --color-card: rgba(0, 0, 0, 0.03);
-    --color-text: #171717;
-    --color-text-secondary: #525252;
-    --color-text-muted: #a3a3a3;
-    --color-border: rgba(0, 0, 0, 0.08);
-    --color-accent-subtle: rgba(16, 185, 129, 0.08);
+    --color-bg: oklch(0.97 0.015 85);
+    --color-surface: oklch(0.99 0.005 85);
+    --color-card: oklch(0.94 0.02 85 / 0.5);
+    --color-text: oklch(0.25 0.02 260);
+    --color-text-secondary: oklch(0.45 0.02 260);
+    --color-text-muted: oklch(0.65 0.01 260);
+    --color-border: oklch(0.88 0.015 85);
+    --color-accent-subtle: oklch(0.65 0.15 150 / 0.1);
     color-scheme: light;
   }
 
