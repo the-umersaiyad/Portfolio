@@ -51,8 +51,13 @@ export default async function SkillsAdminPage(props: { searchParams?: Promise<an
             <input name="name" defaultValue={skillToEdit?.name || ""} required className="w-full bg-bg border border-border rounded-xl px-4 py-3 text-sm text-text focus:outline-none focus:border-accent transition-all" />
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-text-secondary ml-1">Category (Frontend, Backend, etc.)</label>
-            <input name="category" defaultValue={skillToEdit?.category || ""} required className="w-full bg-bg border border-border rounded-xl px-4 py-3 text-sm text-text focus:outline-none focus:border-accent transition-all" />
+            <label className="text-sm font-medium text-text-secondary ml-1">Category</label>
+            <select name="category" defaultValue={skillToEdit?.category || "Frontend & Core"} required className="w-full bg-bg border border-border rounded-xl px-4 py-3 text-sm text-text focus:outline-none focus:border-accent transition-all appearance-none">
+              <option value="Frontend & Core">Frontend & Core</option>
+              <option value="Backend & APIs">Backend & APIs</option>
+              <option value="Databases & DevOps">Databases & DevOps</option>
+              <option value="Tools & Design">Tools & Design</option>
+            </select>
           </div>
           <div className="space-y-1.5 md:col-span-2">
             <label className="text-sm font-medium text-text-secondary ml-1">Proficiency (0-100)</label>
