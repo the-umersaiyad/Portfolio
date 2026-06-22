@@ -1,19 +1,42 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef } from "react";
 import { updateGlobalSettings } from "@/app/admin/actions";
-import { Palette, Moon, Sun, Loader2 } from "lucide-react";
+import { Palette, Moon, Sun, Loader2, RotateCcw } from "lucide-react";
 
 export function ThemeConfigCard({ initialSettings }: { initialSettings: any }) {
   const [settings, setSettings] = useState(initialSettings);
   const [isPending, startTransition] = useTransition();
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleUpdate = (field: string, value: string) => {
     const newSettings = { ...settings, [field]: value };
     setSettings(newSettings);
     
+    if (timerRef.current) clearTimeout(timerRef.current);
+    
+    if (field === "activeTheme") {
+      startTransition(() => {
+        updateGlobalSettings({ [field]: value });
+      });
+    } else {
+      timerRef.current = setTimeout(() => {
+        startTransition(() => {
+          updateGlobalSettings({ [field]: value });
+        });
+      }, 500);
+    }
+  };
+
+  const handleReset = () => {
+    const defaults = {
+      activeTheme: "dark",
+      accentColorDark: "#10b981",
+      accentColorLight: "#8b5cf6",
+    };
+    setSettings(defaults);
     startTransition(() => {
-      updateGlobalSettings({ [field]: value });
+      updateGlobalSettings(defaults);
     });
   };
 
@@ -27,7 +50,16 @@ export function ThemeConfigCard({ initialSettings }: { initialSettings: any }) {
           <h2 className="font-display font-bold text-lg text-text">Global Appearance</h2>
           <p className="text-sm text-text-secondary">Manage the public website's active theme and accent colors.</p>
         </div>
-        {isPending && <Loader2 className="w-5 h-5 text-accent animate-spin ml-auto" />}
+        <div className="ml-auto flex items-center gap-3">
+          {isPending && <Loader2 className="w-4 h-4 text-accent animate-spin" />}
+          <button 
+            onClick={handleReset}
+            className="text-text-muted hover:text-text flex items-center gap-1.5 text-xs transition-colors bg-bg px-2.5 py-1.5 rounded-md border border-border"
+            title="Reset to default colors"
+          >
+            <RotateCcw className="w-3.5 h-3.5" /> Reset
+          </button>
+        </div>
       </div>
 
       <div className="p-6 space-y-6">
