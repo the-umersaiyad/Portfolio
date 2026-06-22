@@ -20,12 +20,12 @@
 
 @layer base {
   .light {
-    --color-bg: #f7f3ec;
-    --color-surface: #f0eeec;
+    --color-bg: #fafafa;
+    --color-surface: #ffffff;
     --color-card: rgba(0, 0, 0, 0.03);
-    --color-text: #0f172a;
-    --color-text-secondary: #475569;
-    --color-text-muted: #94a3b8;
+    --color-text: #171717;
+    --color-text-secondary: #525252;
+    --color-text-muted: #a3a3a3;
     --color-border: rgba(0, 0, 0, 0.08);
     --color-accent-subtle: rgba(16, 185, 129, 0.08);
     color-scheme: light;
