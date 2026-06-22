@@ -1607,6 +1607,8 @@ export function PortfolioApp({ dbData }: { dbData?: any }) {
 
   useEffect(() => {
     if (isMobile) return;
+    let hasTransitionedThisSwipe = false;
+
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
 
@@ -1615,7 +1617,12 @@ export function PortfolioApp({ dbData }: { dbData?: any }) {
       if (wheelEndTimer.current) clearTimeout(wheelEndTimer.current);
       wheelEndTimer.current = setTimeout(() => {
         accumulatedDelta.current = 0;
+        hasTransitionedThisSwipe = false;
       }, 150);
+
+      if (hasTransitionedThisSwipe) {
+        return;
+      }
 
       if (container) {
         const { scrollTop, scrollHeight, clientHeight } = container;
@@ -1633,6 +1640,7 @@ export function PortfolioApp({ dbData }: { dbData?: any }) {
               accumulatedDelta.current += e.deltaY;
               if (accumulatedDelta.current > 60) {
                 accumulatedDelta.current = 0;
+                hasTransitionedThisSwipe = true;
                 scrollController.next();
               } else {
                 container.scrollTop = scrollHeight - clientHeight;
@@ -1650,6 +1658,7 @@ export function PortfolioApp({ dbData }: { dbData?: any }) {
               accumulatedDelta.current += e.deltaY;
               if (accumulatedDelta.current < -60) {
                 accumulatedDelta.current = 0;
+                hasTransitionedThisSwipe = true;
                 scrollController.prev();
               } else {
                 container.scrollTop = 0;
@@ -1665,12 +1674,14 @@ export function PortfolioApp({ dbData }: { dbData?: any }) {
         accumulatedDelta.current += e.deltaY;
         if (accumulatedDelta.current > 60) {
           accumulatedDelta.current = 0;
+          hasTransitionedThisSwipe = true;
           scrollController.next();
         }
       } else if (e.deltaY < 0) {
         accumulatedDelta.current += e.deltaY;
         if (accumulatedDelta.current < -60) {
           accumulatedDelta.current = 0;
+          hasTransitionedThisSwipe = true;
           scrollController.prev();
         }
       }
