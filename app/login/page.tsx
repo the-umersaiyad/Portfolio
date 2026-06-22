@@ -1,24 +1,22 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { login } from "./actions";
-import { Lock, Mail, ArrowRight, Sparkles, Loader2 } from "lucide-react";
+import { Lock, Mail, ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    startTransition(async () => {
-      setError(null);
-      const res = await login(formData);
-      if (res?.error) {
-        setError(res.error);
-      }
-    });
+  async function handleSubmit(formData: FormData) {
+    setLoading(true);
+    setError(null);
+    const res = await login(formData);
+    if (res?.error) {
+      setError(res.error);
+      setLoading(false);
+    }
   }
 
   return (
@@ -49,7 +47,7 @@ export default function LoginPage() {
           <p className="text-sm text-text-secondary">Sign in to manage your portfolio content.</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form action={handleSubmit} className="space-y-5">
           {error && (
             <div className="bg-red-500/10 border border-red-500/20 text-red-500 text-sm px-4 py-3 rounded-xl">
               {error}
@@ -88,11 +86,11 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            disabled={isPending}
+            disabled={loading}
             className="w-full bg-accent text-white py-3 rounded-xl font-medium shadow-lg shadow-accent/20 hover:bg-accent-hover hover:shadow-accent/40 transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-70"
           >
-            {isPending ? "Authenticating..." : "Sign In"}
-            {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
+            {loading ? "Authenticating..." : "Sign In"}
+            {!loading && <ArrowRight className="w-4 h-4" />}
           </button>
         </form>
       </motion.div>

@@ -24,7 +24,7 @@ export function GlowCard({ children, className = "" }: GlowCardProps) {
       <div
         className="pointer-events-none absolute -top-[120px] -right-[120px] w-[400px] h-[400px] rounded-full z-0"
         style={{
-          background: "radial-gradient(circle at center, rgba(16, 185, 129, 0.35) 0%, rgba(16, 185, 129, 0.1) 45%, transparent 75%)",
+          background: "radial-gradient(circle at center, color-mix(in srgb, var(--color-accent) 35%, transparent) 0%, color-mix(in srgb, var(--color-accent) 10%, transparent) 45%, transparent 75%)",
           // Static layer — never changes, always GPU composited
           willChange: "transform",
         }}
@@ -34,7 +34,7 @@ export function GlowCard({ children, className = "" }: GlowCardProps) {
       <div
         className="pointer-events-none absolute -bottom-[100px] -left-[100px] w-[360px] h-[360px] rounded-full z-0"
         style={{
-          background: "radial-gradient(circle at center, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0.08) 45%, transparent 75%)",
+          background: "radial-gradient(circle at center, color-mix(in srgb, var(--color-accent) 25%, transparent) 0%, color-mix(in srgb, var(--color-accent) 8%, transparent) 45%, transparent 75%)",
           willChange: "transform",
         }}
       />

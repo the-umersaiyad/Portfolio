@@ -160,7 +160,7 @@ export function ProjectDeck({ projects }: ProjectDeckProps) {
                 </div>
 
                 {/* Info Text */}
-                <div className={`px-4 py-3 sm:p-6 h-[42%] flex flex-col justify-between ${isDragging && isTop ? "pointer-events-none" : ""}`}>
+                <div className={`px-4 py-3 sm:p-6 h-[42%] bg-surface/95 backdrop-blur-2xl flex flex-col justify-between ${isDragging && isTop ? "pointer-events-none" : ""}`}>
                   <div>
                     <div className="flex items-center justify-between gap-4 mb-2">
                       <h3 className="font-display font-semibold text-lg text-text leading-tight select-none">

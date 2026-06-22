@@ -108,8 +108,8 @@ export function CustomCursor() {
           ringRef.current.style.borderRadius = "12px";
           ringRef.current.style.transform = `translate3d(${ringPos.current.x}px, ${ringPos.current.y}px, 0)`;
           ringRef.current.style.borderColor = "var(--color-accent)";
-          ringRef.current.style.backgroundColor = "rgba(16, 185, 129, 0.06)";
-          ringRef.current.style.boxShadow = "0 0 15px rgba(16, 185, 129, 0.25)";
+          ringRef.current.style.backgroundColor = "color-mix(in srgb, var(--color-accent) 6%, transparent)";
+          ringRef.current.style.boxShadow = "0 0 15px color-mix(in srgb, var(--color-accent) 25%, transparent)";
         } else {
           const defaultSize = hoveredType === "view" || hoveredType === "visit" ? 85 : 44;
           const targetX = mousePos.current.x - defaultSize / 2;
@@ -122,9 +122,9 @@ export function CustomCursor() {
           ringRef.current.style.height = `${defaultSize}px`;
           ringRef.current.style.borderRadius = "50%";
           ringRef.current.style.transform = `translate3d(${ringPos.current.x}px, ${ringPos.current.y}px, 0) scale(${isClicked ? 0.85 : 1})`;
-          ringRef.current.style.borderColor = hoveredType ? "var(--color-accent)" : "rgba(16, 185, 129, 0.38)";
-          ringRef.current.style.backgroundColor = hoveredType ? "rgba(16, 185, 129, 0.08)" : "transparent";
-          ringRef.current.style.boxShadow = hoveredType ? "0 0 10px rgba(16, 185, 129, 0.15)" : "none";
+          ringRef.current.style.borderColor = hoveredType ? "var(--color-accent)" : "color-mix(in srgb, var(--color-accent) 38%, transparent)";
+          ringRef.current.style.backgroundColor = hoveredType ? "color-mix(in srgb, var(--color-accent) 8%, transparent)" : "transparent";
+          ringRef.current.style.boxShadow = hoveredType ? "0 0 10px color-mix(in srgb, var(--color-accent) 15%, transparent)" : "none";
         }
 
         // Update text content directly via DOM (avoids React re-render)
@@ -185,7 +185,7 @@ export function CustomCursor() {
           ref={textRef}
           className="text-[10px] font-bold font-mono tracking-widest text-accent"
           style={{
-            textShadow: "0 0 6px rgba(16, 185, 129, 0.8)",
+            textShadow: "0 0 6px color-mix(in srgb, var(--color-accent) 80%, transparent)",
             display: "none",
           }}
         />

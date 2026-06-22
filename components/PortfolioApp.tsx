@@ -272,7 +272,7 @@ function GlassCard({
       // Direct DOM update — zero React re-renders
       glareRef.current.style.opacity = "0.08";
       glareRef.current.style.background = `radial-gradient(circle at ${gX}% ${gY}%, rgba(255, 255, 255, 0.75) 0%, transparent 60%)`;
-      cardRef.current.style.boxShadow = "0 20px 45px rgba(16, 185, 129, 0.05)";
+      cardRef.current.style.boxShadow = "0 20px 45px color-mix(in srgb, var(--color-accent) 5%, transparent)";
     });
 
     if (onMouseMove) onMouseMove(e);
@@ -693,7 +693,7 @@ const servicesData = [
           <div key={ep.path} className="flex items-center gap-2 font-mono text-[9px]">
             <span className="px-1.5 py-0.5 rounded text-[8px] font-black bg-accent/15 text-accent tracking-wider">{ep.method}</span>
             <span className="text-text-secondary flex-1 truncate">{ep.path}</span>
-            <span className="text-green-400 font-bold">{ep.status}</span>
+            <span className="text-accent font-bold">{ep.status}</span>
             <span className="text-text-muted">{ep.ms}</span>
           </div>
         ))}
@@ -739,13 +739,13 @@ const servicesData = [
           <React.Fragment key={stage}>
             <div className="flex flex-col items-center gap-0.5 w-full">
               <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-[9px] font-black font-mono border ${
-                i <= 2 ? "border-green-400/40 bg-green-400/10 text-green-400" : "border-accent/40 bg-accent/10 text-accent animate-pulse"
+                i <= 2 ? "border-accent/40 bg-accent/10 text-accent" : "border-accent/40 bg-accent/10 text-accent animate-pulse"
               }`}>
                 {i <= 2 ? "✓" : "▸"}
               </div>
               <span className="text-[10px] font-mono text-text-muted uppercase tracking-wider">{stage}</span>
             </div>
-            {i < 3 && <div className={`w-4 h-px mt-[-10px] ${i <= 1 ? "bg-green-400/40" : "bg-border"}`} />}
+            {i < 3 && <div className={`w-4 h-px mt-[-10px] ${i <= 1 ? "bg-accent/40" : "bg-border"}`} />}
           </React.Fragment>
         ))}
       </div>
@@ -1361,8 +1361,8 @@ function ScrollProgress() {
         ref={barRef}
         className="h-full origin-left w-full"
         style={{
-          background: "linear-gradient(to right, #10b981, #06b6d4, #3b82f6)",
-          boxShadow: "0 0 8px rgba(16, 185, 129, 0.5), 0 0 15px rgba(6, 182, 212, 0.3)",
+          background: "var(--color-progress-gradient)",
+          boxShadow: "0 0 8px color-mix(in srgb, var(--color-accent) 50%, transparent), 0 0 15px rgba(6, 182, 212, 0.3)",
           transform: "scaleX(0)",
           willChange: "transform",
         }}
@@ -1393,8 +1393,8 @@ function MobileScrollProgress() {
         ref={barRef}
         className="h-full origin-left w-full"
         style={{
-          background: "linear-gradient(to right, #10b981, #06b6d4, #3b82f6)",
-          boxShadow: "0 0 8px rgba(16, 185, 129, 0.5), 0 0 15px rgba(6, 182, 212, 0.3)",
+          background: "var(--color-progress-gradient)",
+          boxShadow: "0 0 8px color-mix(in srgb, var(--color-accent) 50%, transparent), 0 0 15px rgba(6, 182, 212, 0.3)",
           transform: "scaleX(0)",
           willChange: "transform",
         }}
@@ -1463,7 +1463,7 @@ function SectionDots() {
           <motion.circle
             cx={svgWidth / 2}
             r={7}
-            fill="#10b981"
+            fill="var(--color-accent)"
             initial={{ cy: 5 + active * gap + dotSize / 2 }}
             animate={{ cy: 5 + active * gap + dotSize / 2 }}
             transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
@@ -1471,7 +1471,7 @@ function SectionDots() {
           <motion.circle
             cx={svgWidth / 2}
             r={6}
-            fill="#10b981"
+            fill="var(--color-accent)"
             initial={{ cy: 5 + active * gap + dotSize / 2 }}
             animate={{ cy: 5 + active * gap + dotSize / 2 }}
             transition={{ duration: 0.65, ease: [0.4, 0, 0.2, 1] }}
@@ -1479,7 +1479,7 @@ function SectionDots() {
           <motion.circle
             cx={svgWidth / 2}
             r={7}
-            fill="#10b981"
+            fill="var(--color-accent)"
             initial={{ cy: 5 + active * gap + dotSize / 2 }}
             animate={{ cy: 5 + active * gap + dotSize / 2 }}
             transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}

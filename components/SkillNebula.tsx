@@ -270,12 +270,12 @@ function TerminalConsole({ skill }: TerminalConsoleProps) {
         <div className="flex gap-1">
           <span className="w-2 h-2 rounded-full bg-red-500/70" />
           <span className="w-2 h-2 rounded-full bg-yellow-500/70" />
-          <span className="w-2 h-2 rounded-full bg-green-500/70" />
+          <span className="w-2 h-2 rounded-full bg-accent/70" />
         </div>
         <span className="text-[9px] text-accent/70 font-semibold tracking-wider">sh - sys_log</span>
       </div>
 
-      <div className="flex-grow text-[9px] leading-normal text-emerald-400 space-y-1 overflow-hidden">
+      <div className="flex-grow text-[9px] leading-normal text-accent/80 space-y-1 overflow-hidden">
         {terminalLines.map((line, idx) => {
           const isCommand = line.startsWith("$");
           const isSuccess = line.startsWith("✔") || line.startsWith("STATUS:");
@@ -332,7 +332,7 @@ function SkillProgressRing({ proficiency }: { proficiency: number }) {
           strokeDashoffset={strokeDashoffset}
           strokeLinecap="round"
           style={{
-            filter: "drop-shadow(0 0 4px rgba(16, 185, 129, 0.55))",
+            filter: "drop-shadow(0 0 4px color-mix(in srgb, var(--color-accent) 55%, transparent))",
             transition: "stroke-dashoffset 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)",
           }}
         />

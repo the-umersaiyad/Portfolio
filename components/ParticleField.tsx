@@ -9,7 +9,7 @@ interface Particle {
   y: number;
   z: number;
   baseSize: number;
-  color: string;
+  opacity: number;
 }
 
 interface TrailParticle {
@@ -20,7 +20,7 @@ interface TrailParticle {
   size: number;
   life: number; // 1.0 down to 0
   maxLife: number;
-  color: string;
+  opacity: number;
 }
 
 interface Shockwave {
@@ -78,7 +78,7 @@ export function ParticleField() {
         y,
         z,
         baseSize: Math.random() * 1.8 + 0.8, // Glowing stardust sizes
-        color: "rgba(16, 185, 129, 0.8)",
+        opacity: 0.8,
       });
     }
     return particles;
@@ -125,7 +125,7 @@ export function ParticleField() {
           size: Math.random() * 2.2 + 1.0,
           life: 1.0,
           maxLife: Math.random() * 35 + 20,
-          color: `rgba(16, 185, 129, ${Math.random() * 0.5 + 0.4})`,
+          opacity: Math.random() * 0.5 + 0.4,
         });
       }
 
@@ -159,7 +159,7 @@ export function ParticleField() {
           size: Math.random() * 3.0 + 1.2,
           life: 1.0,
           maxLife: Math.random() * 50 + 30,
-          color: `rgba(52, 211, 153, ${Math.random() * 0.6 + 0.4})`,
+          opacity: Math.random() * 0.6 + 0.4,
         });
       }
     };
@@ -199,6 +199,15 @@ export function ParticleField() {
         ease: "easeOutExpo",
       });
     });
+
+    let currentAccent = "#10b981";
+    const updateThemeColor = () => {
+      const val = getComputedStyle(document.body).getPropertyValue('--color-accent').trim();
+      if (val) currentAccent = val;
+    };
+    updateThemeColor();
+    const observer = new MutationObserver(updateThemeColor);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
     // Render Canvas Loop
     let time = 0;
@@ -241,18 +250,20 @@ export function ParticleField() {
 
       // Draw faint, expanding ripple rings representing the gravity distortion waves
       shockwavesRef.current.forEach((sw) => {
-        ctx.strokeStyle = `rgba(16, 185, 129, ${sw.life * 0.18})`;
+        ctx.globalAlpha = sw.life * 0.18;
+        ctx.strokeStyle = currentAccent;
         ctx.lineWidth = 1.8;
         ctx.beginPath();
         ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
         ctx.stroke();
 
-        ctx.strokeStyle = `rgba(52, 211, 153, ${sw.life * 0.06})`;
+        ctx.globalAlpha = sw.life * 0.06;
         ctx.lineWidth = 6.0;
         ctx.beginPath();
         ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
         ctx.stroke();
       });
+      ctx.globalAlpha = 1.0;
 
       // Mouse Screen coordinates for gravity interactive ripple physics
       const mX = mouseRef.current.rawX;
@@ -347,7 +358,8 @@ export function ParticleField() {
       });
 
       // Draw Constellation connection lines (batched into single path for GPU efficiency)
-      ctx.strokeStyle = "rgba(16, 185, 129, 0.08)";
+      ctx.globalAlpha = 0.08;
+      ctx.strokeStyle = currentAccent;
       ctx.lineWidth = 0.7;
       ctx.beginPath();
       
@@ -415,7 +427,8 @@ export function ParticleField() {
           const proximityRatio = 1.0 - c.dist / 230;
           const opacity = proximityRatio * 0.28;
 
-          ctx.strokeStyle = `rgba(16, 185, 129, ${opacity})`;
+          ctx.globalAlpha = opacity;
+          ctx.strokeStyle = currentAccent;
           ctx.lineWidth = 0.95;
           ctx.beginPath();
           ctx.moveTo(mX, mY);
@@ -423,18 +436,20 @@ export function ParticleField() {
           ctx.stroke();
 
           // Delicate stardust halos on snapped stars
-          ctx.strokeStyle = `rgba(52, 211, 153, ${opacity * 0.7})`;
+          ctx.globalAlpha = opacity * 0.7;
           ctx.lineWidth = 0.55;
           ctx.beginPath();
           ctx.arc(p.screenX, p.screenY, p.radius * 2.6, 0, Math.PI * 2);
           ctx.stroke();
         });
       }
+      ctx.globalAlpha = 1.0;
 
       // Draw all stars with depth shading
       projectedParticles.forEach((p) => {
         const opacity = Math.max(0.12, Math.min(0.9, 1 - (p.zDepth + 150) / 400));
-        ctx.fillStyle = `rgba(16, 185, 129, ${opacity * 0.78})`;
+        ctx.globalAlpha = opacity * 0.78;
+        ctx.fillStyle = currentAccent;
 
         ctx.beginPath();
         ctx.arc(p.screenX, p.screenY, Math.max(0.5, p.radius), 0, Math.PI * 2);
@@ -448,7 +463,8 @@ export function ParticleField() {
         t.life -= 1.0 / t.maxLife;
 
         if (t.life > 0) {
-          ctx.fillStyle = t.color.replace(/[\d.]+\)$/, `${t.life * 0.65})`);
+          ctx.globalAlpha = t.opacity * t.life * 0.65;
+          ctx.fillStyle = currentAccent;
           ctx.beginPath();
           ctx.arc(t.x, t.y, t.size * t.life, 0, Math.PI * 2);
           ctx.fill();
@@ -469,6 +485,7 @@ export function ParticleField() {
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("wheel", handleWheel);
       unsubscribe();
+      observer.disconnect();
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }

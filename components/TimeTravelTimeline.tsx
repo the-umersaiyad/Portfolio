@@ -192,7 +192,7 @@ export function TimeTravelTimeline({ active }: { active?: boolean }) {
                   className="w-9 h-9 rounded-full bg-surface border border-accent flex items-center justify-center shadow-lg relative group cursor-pointer"
                   data-cursor="magnetic"
                   style={{
-                    boxShadow: "0 0 12px rgba(16, 185, 129, 0.4)",
+                    boxShadow: "0 0 12px color-mix(in srgb, var(--color-accent) 40%, transparent)",
                     willChange: "transform",
                   }}
                 >
