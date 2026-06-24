@@ -5,6 +5,7 @@ import { Code2, Plus, Edit, X } from "lucide-react";
 import { SubmitButton } from "@/components/SubmitButton";
 import { SkillsList } from "@/components/SkillsList";
 import { ProficiencyInput } from "@/components/ProficiencyInput";
+import { CustomSelect } from "@/components/CustomSelect";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
 
@@ -52,17 +53,17 @@ export default async function SkillsAdminPage(props: { searchParams?: Promise<an
           </div>
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-text-secondary ml-1">Category</label>
-            <select
+            <CustomSelect
               name="category"
               defaultValue={skillToEdit?.category || "Frontend & Core"}
               required
-              className="w-full bg-bg border border-border rounded-xl px-4 py-3 text-sm text-text focus:outline-none focus:border-accent transition-all cursor-pointer appearance-none"
-            >
-              <option value="Frontend & Core">Frontend & Core</option>
-              <option value="Backend & APIs">Backend & APIs</option>
-              <option value="Databases & DevOps">Databases & DevOps</option>
-              <option value="Tools & Design">Tools & Design</option>
-            </select>
+              options={[
+                { value: "Frontend & Core", label: "Frontend & Core" },
+                { value: "Backend & APIs", label: "Backend & APIs" },
+                { value: "Databases & DevOps", label: "Databases & DevOps" },
+                { value: "Tools & Design", label: "Tools & Design" }
+              ]}
+            />
           </div>
           <div className="space-y-1.5 md:col-span-2">
             <label className="text-sm font-medium text-text-secondary ml-1">Proficiency (0-100)</label>
