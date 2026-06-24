@@ -47,7 +47,13 @@ export default function LoginPage() {
           <p className="text-sm text-text-secondary">Sign in to manage your portfolio content.</p>
         </div>
 
-        <form action={handleSubmit} className="space-y-5">
+        <form 
+          onSubmit={async (e) => {
+            e.preventDefault();
+            await handleSubmit(new FormData(e.currentTarget));
+          }} 
+          className="space-y-5"
+        >
           {error && (
             <div className="bg-red-500/10 border border-red-500/20 text-red-500 text-sm px-4 py-3 rounded-xl">
               {error}
