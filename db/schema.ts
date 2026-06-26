@@ -28,6 +28,7 @@ export const profiles = pgTable("profiles", {
   availability: text("availability").notNull(),
   heroImage: text("hero_image").notNull(),
   heroImageAlt: text("hero_image_alt").default("Portfolio Hero Image").notNull(),
+  showHeroImage: boolean("show_hero_image").default(true).notNull(),
   cvUrl: text("cv_url").default("").notNull(),
 });
 

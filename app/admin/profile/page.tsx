@@ -23,6 +23,7 @@ export default async function ProfileAdminPage() {
     availability: "Available for freelance",
     heroImage: "/umer-hero-bg.png",
     heroImageAlt: "Umer Saiyad - Full Stack Developer",
+    showHeroImage: true,
     cvUrl: "",
   };
 
@@ -73,7 +74,25 @@ export default async function ProfileAdminPage() {
             <input name="availability" defaultValue={profile.availability} required className="w-full bg-bg border border-border rounded-xl px-4 py-3 text-sm text-text focus:outline-none focus:border-accent transition-all" />
           </div>
           <div className="space-y-1.5 md:col-span-2">
-            <label className="text-sm font-medium text-text-secondary ml-1">Hero Image</label>
+            <div className="flex items-center gap-3 mb-2">
+              <label className="text-sm font-medium text-text-secondary ml-1">Hero Image</label>
+              <label className="flex items-center cursor-pointer">
+                <div className="relative">
+                  <input type="checkbox" name="showHeroImage" className="sr-only" defaultChecked={profile.showHeroImage} />
+                  <div className="block bg-bg border border-border w-10 h-6 rounded-full"></div>
+                  <div className="dot absolute left-1 top-1 bg-text-secondary w-4 h-4 rounded-full transition"></div>
+                </div>
+                <div className="ml-3 text-xs font-medium text-text-secondary">
+                  Show Image
+                </div>
+              </label>
+              <style>{`
+                input:checked ~ .dot {
+                  transform: translateX(100%);
+                  background-color: var(--color-accent);
+                }
+              `}</style>
+            </div>
             <ImageUploader name="heroImageFile" defaultUrl={profile.heroImage} />
           </div>
           <div className="space-y-1.5 md:col-span-2">

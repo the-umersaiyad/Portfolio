@@ -33,6 +33,7 @@ export async function updateProfile(formData: FormData) {
     availability: formData.get("availability") as string,
     heroImage: heroImageUrl,
     heroImageAlt: formData.get("heroImageAlt") as string,
+    showHeroImage: formData.get("showHeroImage") === "on",
     cvUrl: cvFileUrl,
   };
 

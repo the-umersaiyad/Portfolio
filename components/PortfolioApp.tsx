@@ -76,6 +76,7 @@ export let profile: any = {
   education: "BCA & MCA — Uka Tarsadia University",
   availability: "Available for freelance",
   heroImage: "/umer-hero-bg.png",
+  showHeroImage: true,
 };
 
 export let desktopSections: any[] = [];
@@ -500,7 +501,7 @@ function Hero({ active }: { active?: boolean }) {
       </div>
 
       <Container className="relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className={`grid ${profile.showHeroImage !== false ? "lg:grid-cols-2" : "grid-cols-1 max-w-4xl mx-auto"} gap-12 lg:gap-16 items-center`}>
           {/* Left Content */}
           <div>
             <div
@@ -568,6 +569,7 @@ function Hero({ active }: { active?: boolean }) {
           </div>
 
           {/* Right - Hero Image */}
+          {profile.showHeroImage !== false && (
           <div
             className="hero-image-wrap relative hidden lg:block"
             style={{ opacity: 0 }}
@@ -598,6 +600,7 @@ function Hero({ active }: { active?: boolean }) {
               </div>
             </div>
           </div>
+          )}
         </div>
       </Container>
     </section>

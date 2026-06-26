@@ -65,6 +65,7 @@ export default async function Home() {
     availability: "Available for freelance",
     heroImage: "/umer-hero-bg.png",
     heroImageAlt: "Umer Saiyad - Full Stack Developer",
+    showHeroImage: true,
     cvUrl: "",
   };
 
