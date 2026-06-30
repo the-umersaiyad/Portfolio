@@ -115,7 +115,14 @@ export function ThemeConfigCard({ initialSettings }: { initialSettings: any }) {
                 type="color"
                 value={settings.accentColorDark}
                 onChange={(e) => handleUpdate("accentColorDark", e.target.value)}
-                className="w-10 h-10 rounded cursor-pointer border-0 p-0 bg-transparent"
+                className="w-10 h-10 rounded cursor-pointer border-0 p-0 bg-transparent shrink-0"
+              />
+              <input
+                type="text"
+                value={settings.accentColorDark}
+                onChange={(e) => handleUpdate("accentColorDark", e.target.value)}
+                className="w-20 text-sm bg-surface border border-border rounded-md px-2 py-1.5 text-text focus:outline-none focus:border-accent transition-colors"
+                placeholder="#000000"
               />
             </div>
           </div>
@@ -137,7 +144,14 @@ export function ThemeConfigCard({ initialSettings }: { initialSettings: any }) {
                 type="color"
                 value={settings.accentColorLight}
                 onChange={(e) => handleUpdate("accentColorLight", e.target.value)}
-                className="w-10 h-10 rounded cursor-pointer border-0 p-0 bg-transparent"
+                className="w-10 h-10 rounded cursor-pointer border-0 p-0 bg-transparent shrink-0"
+              />
+              <input
+                type="text"
+                value={settings.accentColorLight}
+                onChange={(e) => handleUpdate("accentColorLight", e.target.value)}
+                className="w-20 text-sm bg-surface border border-border rounded-md px-2 py-1.5 text-text focus:outline-none focus:border-accent transition-colors"
+                placeholder="#000000"
               />
             </div>
           </div>
