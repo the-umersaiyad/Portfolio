@@ -2,12 +2,19 @@
 
 import { useState, useTransition, useRef } from "react";
 import { updateGlobalSettings } from "@/app/admin/actions";
-import { Palette, Moon, Sun, Loader2, RotateCcw } from "lucide-react";
+import { Palette, Moon, Sun, Loader2, RotateCcw, Copy, Check } from "lucide-react";
 
 export function ThemeConfigCard({ initialSettings }: { initialSettings: any }) {
   const [settings, setSettings] = useState(initialSettings);
   const [isPending, startTransition] = useTransition();
+  const [copiedColor, setCopiedColor] = useState<string | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const copyToClipboard = (color: string) => {
+    navigator.clipboard.writeText(color);
+    setCopiedColor(color);
+    setTimeout(() => setCopiedColor(null), 2000);
+  };
 
   const handleUpdate = (field: string, value: string) => {
     const newSettings = { ...settings, [field]: value };
@@ -96,12 +103,21 @@ export function ThemeConfigCard({ initialSettings }: { initialSettings: any }) {
               <h3 className="font-medium text-text text-sm">Dark Mode Accent</h3>
               <p className="text-[11px] text-text-muted mt-1">Primary color for dark mode.</p>
             </div>
-            <input
-              type="color"
-              value={settings.accentColorDark}
-              onChange={(e) => handleUpdate("accentColorDark", e.target.value)}
-              className="w-10 h-10 rounded cursor-pointer border-0 p-0 bg-transparent"
-            />
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => copyToClipboard(settings.accentColorDark)}
+                className="p-1.5 text-text-muted hover:text-text hover:bg-surface rounded-md transition-all"
+                title="Copy Hex Code"
+              >
+                {copiedColor === settings.accentColorDark ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+              </button>
+              <input
+                type="color"
+                value={settings.accentColorDark}
+                onChange={(e) => handleUpdate("accentColorDark", e.target.value)}
+                className="w-10 h-10 rounded cursor-pointer border-0 p-0 bg-transparent"
+              />
+            </div>
           </div>
 
           <div className="bg-bg border border-border rounded-xl p-4 flex items-center justify-between">
@@ -109,12 +125,21 @@ export function ThemeConfigCard({ initialSettings }: { initialSettings: any }) {
               <h3 className="font-medium text-text text-sm">Light Mode Accent</h3>
               <p className="text-[11px] text-text-muted mt-1">Primary color for light mode.</p>
             </div>
-            <input
-              type="color"
-              value={settings.accentColorLight}
-              onChange={(e) => handleUpdate("accentColorLight", e.target.value)}
-              className="w-10 h-10 rounded cursor-pointer border-0 p-0 bg-transparent"
-            />
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => copyToClipboard(settings.accentColorLight)}
+                className="p-1.5 text-text-muted hover:text-text hover:bg-surface rounded-md transition-all"
+                title="Copy Hex Code"
+              >
+                {copiedColor === settings.accentColorLight ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+              </button>
+              <input
+                type="color"
+                value={settings.accentColorLight}
+                onChange={(e) => handleUpdate("accentColorLight", e.target.value)}
+                className="w-10 h-10 rounded cursor-pointer border-0 p-0 bg-transparent"
+              />
+            </div>
           </div>
         </div>
       </div>

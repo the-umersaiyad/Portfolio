@@ -12,7 +12,8 @@ import {
   Share2, 
   LogOut,
   Menu,
-  X
+  X,
+  ExternalLink
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -83,7 +84,11 @@ export function AdminSidebar({ logoutAction }: { logoutAction: () => void }) {
           })}
         </nav>
 
-        <div className="p-4 border-t border-border">
+        <div className="px-4 py-4 border-t border-border space-y-2">
+          <Link href="/" target="_blank" className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-sm font-medium text-text-secondary hover:text-accent hover:bg-accent-subtle transition-all">
+            <ExternalLink className="w-4 h-4" />
+            Visit Site
+          </Link>
           <form action={logoutAction}>
             <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-sm font-medium text-text-secondary hover:text-red-400 hover:bg-red-500/10 transition-all">
               <LogOut className="w-4 h-4" />
