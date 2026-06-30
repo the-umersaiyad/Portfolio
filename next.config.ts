@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  serverActions: {
+    bodySizeLimit: '10mb',
+  },
   allowedDevOrigins: ["192.168.1.17"],
   images: {
     formats: ["image/avif", "image/webp"],

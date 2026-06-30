@@ -15,6 +15,11 @@ export function ImageUploader({ name, defaultUrl }: ImageUploaderProps) {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 4.5 * 1024 * 1024) {
+        alert("Image must be smaller than 4.5MB");
+        if (inputRef.current) inputRef.current.value = "";
+        return;
+      }
       // Create a temporary local URL for immediate preview
       const objectUrl = URL.createObjectURL(file);
       setPreviewUrl(objectUrl);
@@ -71,7 +76,7 @@ export function ImageUploader({ name, defaultUrl }: ImageUploaderProps) {
         >
           <UploadCloud className="w-8 h-8" />
           <span className="text-sm font-medium">Click to upload image</span>
-          <span className="text-xs opacity-70">JPG, PNG, WebP up to 5MB</span>
+          <span className="text-xs opacity-70">JPG, PNG, WebP up to 4.5MB</span>
         </div>
       )}
     </div>
